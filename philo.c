@@ -10,37 +10,48 @@ void pars_data(t_philo_info *data, char **av, int size)
         data[i].data.time_t_die = atoi(av[2]) * 1000;
         data[i].data.time_t_eat = atoi(av[3]) * 1000;
         data[i].data.time_t_sleep = atoi(av[4]) * 1000;
-        data[i].data.count_philo_eat = atoi(av[5]);    
+        data[i].data.count_philo_eat = atoi(av[5]);
         i++;
     }
 }
+
+/*
+                ## OUTLINE ##
+        ** handle the philo to eat **
+    ** 1- philosofers sits next to each other every philo has a plate of spaguetee
+        and a fork in the right of there hands so N of Philo and N forks and N plates
+    ** 2- So the project is that every philo is a thread has to eat in a spessific amount of time that the user 
+        give us, but the problem is the philo has to eat with two forks the one that is n his left and right one,
+        while the philo is eating the one that sits beside him he won't get access to the his right fork.
+           --Philo eating blocks the resources with mutex, if the time is done the philo has to unlock the resourses to the othe
+            philo and then change his state to sleep then the same goes to the next one sits next of him
+     
+
+
+    ** 1- every philosopher has to eat but when it can be 
+        
+    
+*/
 void handle_state_philo(t_philo_info *info)
 {
-    if (info->state == 0)
+    if (info->state == 0 && info->left_fork)
     {
         printf("%ld %d is eating\n",info->data.time_t_eat, info->id);
         // usleep(info->data.time_t_eat);
         info->state = 1;
-        // printf("%d, %ld, %ld, %ld, %ld\n", info->data.philo_number, info->data.time_t_die, info->data.time_t_eat, info->data.time_t_sleep, info->data.count_philo_eat);
-
     }
+    if (info->state == 1)
+        printf("%ld %d i sleeping\n", info->data.time_t_sleep, info->id);
 }
-void *func(void *args)
+void *routine(void *args)
 {
     int i = gettid();
     t_philo_info *arg = (t_philo_info *) args; 
     handle_state_philo(arg);
-    // printf("treaeds id :[%d]\n", i);
-    // if (arg->id == 0)
-    //     printf("thread 0\n");
-    // else if (arg->id == 1)
-    //     printf("thread 1\n");
-    // else if (arg->id == 2)
-    //     printf("thread 2\n");
-    // else if (arg->id == 3)
-    //     printf("tread 3\n");
-    // printf("hello from threads\n");
+    usleep(arg->data.time_t_eat);
+    printf("treaeds id :[%d]\n", i);
     pthread_exit(NULL);
+    return (NULL);
 }
 
 int main(int ac, char **av)
@@ -54,6 +65,15 @@ int main(int ac, char **av)
     t_philo_info info[num_philo];
     pars_data(info, av, num_philo);
     // memset(info, '0', info->data.philo_number);
+    
+    thds.mutexes = malloc(sizeof(pthread_mutex_t) * info->data.philo_number);
+    while (i < info->data.philo_number)
+    {
+        if (pthread_mutex_init(&thds.mutexes[i], NULL) != 0)
+        return (2);
+        i++;
+    }
+    thds.th = malloc(sizeof(pthread_t) * info->data.philo_number);
     int i_info = 0;
     while (i_info < info->data.philo_number)
     {
@@ -61,21 +81,14 @@ int main(int ac, char **av)
         info[i_info].state = 0;
         info[i_info].left_fork = thds.mutexes;
         info[i_info].time_t_eatt = 1000;
+        info[i_info].left_fork = &(thds.mutexes[i_info]);
+        info[i_info].right_fork = &thds.mutexes[(i_info + 1) % num_philo];
         i_info++;
     }
-    
-    thds.mutexes = malloc(sizeof(pthread_mutex_t) * info->data.philo_number);
-    while (i < info->data.philo_number)
-    {
-        if (pthread_mutex_init(&thds.mutexes[i], NULL) != 0)
-            return (2);
-        i++;
-    }
-    thds.th = malloc(sizeof(pthread_t) * info->data.philo_number);
     i = 0;
     while (i < info->data.philo_number)
     {
-        if (pthread_create(&thds.th[i], NULL, &func, &info[i]) != 0)
+        if (pthread_create(&thds.th[i], NULL, &routine, &info[i]) != 0)
             return (3);
 
         if (pthread_join(thds.th[i], NULL) != 0)
@@ -83,7 +96,7 @@ int main(int ac, char **av)
             i++;
     }
     free(thds.mutexes);
-    printf("%d, %ld, %ld, %ld, %ld", info->data.philo_number, info->data.time_t_die, info->data.time_t_eat, info->data.time_t_sleep, info->data.count_philo_eat);
+    // printf("%d, %ld, %ld, %ld, %ld", info->data.philo_number, info->data.time_t_die, info->data.time_t_eat, info->data.time_t_sleep, info->data.count_philo_eat);
 
     // pthread_create(&t1, NULL, &action, i + 1);
     // pthread_join(t1, NULL);
