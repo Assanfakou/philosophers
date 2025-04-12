@@ -24,13 +24,7 @@ void pars_data(t_philo_info *data, char **av, int size)
         give us, but the problem is the philo has to eat with two forks the one that is n his left and right one,
         while the philo is eating the one that sits beside him he won't get access to the his right fork.
            --Philo eating blocks the resources with mutex, if the time is done the philo has to unlock the resourses to the othe
-            philo and then change his state to sleep then the same goes to the next one sits next of him
-     
-
-
-    ** 1- every philosopher has to eat but when it can be 
-        
-    
+            philo and then change his state to sleep then the same goes to the next one sits next of him 
 */
 void handle_state_philo(t_philo_info *info)
 {
@@ -43,14 +37,76 @@ void handle_state_philo(t_philo_info *info)
     if (info->state == 1)
         printf("%ld %d i sleeping\n", info->data.time_t_sleep, info->id);
 }
+// void print_status(t_philo_info *philo, char *msg)
+// {
+//     pthread_mutex_lock(&philo->left_fork);
+//     printf("%d %s\n", philo->id, msg);
+//     pthread_mutex_unlock(&philo->left_fork);
+// }
+// void *philosopher_routine(void *arg)
+// {
+//     t_philo_info *philo = (t_philo *)arg;
+    
+//     while (1)
+//     {
+//         print_status(philo, "is thinking");
+        
+//         take_forks(philo);
+//         print_status(philo, "is eating");
+//         usleep(philo->data.time_t_eat);
+//         release_forks(philo);
+        
+//         print_status(philo, "is sleeping");
+//         usleep(philo->data.time_t_sleep);
+//     }
+//     return (NULL);
+// }
 void *routine(void *args)
 {
-    int i = gettid();
     t_philo_info *arg = (t_philo_info *) args; 
-    handle_state_philo(arg);
-    usleep(arg->data.time_t_eat);
-    printf("treaeds id :[%d]\n", i);
-    pthread_exit(NULL);
+    // Wait until simulation starts (use start_time)
+// LOOP WHILE simulation is still running:
+    // Think
+    // Lock left fork
+    // Lock right fork
+    // Record the time of the last meal
+    // Print "is eating"
+    // Sleep for time_to_eat
+    // Unlock right fork
+    // Unlock left fork
+    // Print "is sleeping"
+    // Sleep for time_to_sleep
+    // Print "is thinking"
+    int i = 0;
+while (i < 1)
+{
+    printf("philo id %d is thinking\n", arg->id);
+
+    if (arg->id % 2 == 0)
+    {
+        pthread_mutex_lock(arg->left_fork);
+        printf("philosofer id %d has tiking the left fork\n", arg->id);
+        pthread_mutex_lock(arg->right_fork);
+        printf("philosofer id %d has tiken the right fork\n", arg->id);
+    }
+    else
+    {
+        pthread_mutex_lock(arg->right_fork);
+        printf("philo id %d took right fork\n", arg->id);
+        pthread_mutex_lock(arg->left_fork);
+        printf("philo id %d took left fork\n", arg->id);
+    }
+
+    printf("phio id %d is eating\n", arg->id);
+    pthread_mutex_unlock(arg->left_fork);
+    pthread_mutex_unlock(arg->right_fork);
+    i++;
+}
+    // int i = gettid();
+    // handle_state_philo(arg);
+    // usleep(arg->data.time_t_eat);
+    // printf("treaeds id :[%d]\n", i);
+    // pthread_exit(NULL);
     return (NULL);
 }
 
@@ -64,13 +120,12 @@ int main(int ac, char **av)
         return (1);
     t_philo_info info[num_philo];
     pars_data(info, av, num_philo);
-    // memset(info, '0', info->data.philo_number);
     
     thds.mutexes = malloc(sizeof(pthread_mutex_t) * info->data.philo_number);
     while (i < info->data.philo_number)
     {
         if (pthread_mutex_init(&thds.mutexes[i], NULL) != 0)
-        return (2);
+            return (2);
         i++;
     }
     thds.th = malloc(sizeof(pthread_t) * info->data.philo_number);
@@ -80,7 +135,6 @@ int main(int ac, char **av)
         info[i_info].id = i_info;
         info[i_info].state = 0;
         info[i_info].left_fork = thds.mutexes;
-        info[i_info].time_t_eatt = 1000;
         info[i_info].left_fork = &(thds.mutexes[i_info]);
         info[i_info].right_fork = &thds.mutexes[(i_info + 1) % num_philo];
         i_info++;
