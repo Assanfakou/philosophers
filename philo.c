@@ -15,17 +15,6 @@ void pars_data(t_philo_info *data, char **av, int size)
     }
 }
 
-/*
-                ## OUTLINE ##
-        ** handle the philo to eat **
-    ** 1- philosofers sits next to each other every philo has a plate of spaguetee
-        and a fork in the right of there hands so N of Philo and N forks and N plates
-    ** 2- So the project is that every philo is a thread has to eat in a spessific amount of time that the user 
-        give us, but the problem is the philo has to eat with two forks the one that is n his left and right one,
-        while the philo is eating the one that sits beside him he won't get access to the his right fork.
-           --Philo eating blocks the resources with mutex, if the time is done the philo has to unlock the resourses to the othe
-            philo and then change his state to sleep then the same goes to the next one sits next of him 
-*/
 void handle_state_philo(t_philo_info *info)
 {
     if (info->state == 0 && info->left_fork)
@@ -37,71 +26,42 @@ void handle_state_philo(t_philo_info *info)
     if (info->state == 1)
         printf("%ld %d i sleeping\n", info->data.time_t_sleep, info->id);
 }
-// void print_status(t_philo_info *philo, char *msg)
-// {
-//     pthread_mutex_lock(&philo->left_fork);
-//     printf("%d %s\n", philo->id, msg);
-//     pthread_mutex_unlock(&philo->left_fork);
-// }
-// void *philosopher_routine(void *arg)
-// {
-//     t_philo_info *philo = (t_philo *)arg;
-    
-//     while (1)
-//     {
-//         print_status(philo, "is thinking");
-        
-//         take_forks(philo);
-//         print_status(philo, "is eating");
-//         usleep(philo->data.time_t_eat);
-//         release_forks(philo);
-        
-//         print_status(philo, "is sleeping");
-//         usleep(philo->data.time_t_sleep);
-//     }
-//     return (NULL);
-// }
+void print_status(t_philo_info *philo, char *msg)
+{
+    pthread_mutex_lock(&philo->left_fork);
+    printf("%d %s\n", philo->id, msg);
+    pthread_mutex_unlock(&philo->left_fork);
+}
 void *routine(void *args)
 {
     t_philo_info *arg = (t_philo_info *) args; 
     // Wait until simulation starts (use start_time)
-// LOOP WHILE simulation is still running:
-    // Think
-    // Lock left fork
-    // Lock right fork
-    // Record the time of the last meal
-    // Print "is eating"
-    // Sleep for time_to_eat
-    // Unlock right fork
-    // Unlock left fork
-    // Print "is sleeping"
-    // Sleep for time_to_sleep
-    // Print "is thinking"
+
     int i = 0;
-while (i < 1)
-{
-    printf("philo id %d is thinking\n", arg->id);
-
-    if (arg->id % 2 == 0)
+    while (i < 1)
     {
-        pthread_mutex_lock(arg->left_fork);
-        printf("philosofer id %d has tiking the left fork\n", arg->id);
-        pthread_mutex_lock(arg->right_fork);
-        printf("philosofer id %d has tiken the right fork\n", arg->id);
-    }
-    else
-    {
-        pthread_mutex_lock(arg->right_fork);
-        printf("philo id %d took right fork\n", arg->id);
-        pthread_mutex_lock(arg->left_fork);
-        printf("philo id %d took left fork\n", arg->id);
-    }
+        printf("philo id %d is thinking\n", arg->id);
 
-    printf("phio id %d is eating\n", arg->id);
-    pthread_mutex_unlock(arg->left_fork);
-    pthread_mutex_unlock(arg->right_fork);
-    i++;
-}
+        if (arg->id % 2 == 0)
+        {
+            pthread_mutex_lock(arg->left_fork);
+            printf("philosofer id %d has tiking the left fork\n", arg->id);
+            pthread_mutex_lock(arg->right_fork);
+            printf("philosofer id %d has tiken the right fork\n", arg->id);
+        }
+        else
+        {
+            pthread_mutex_lock(arg->right_fork);
+            printf("philo id %d took right fork\n", arg->id);
+            pthread_mutex_lock(arg->left_fork);
+            printf("philo id %d took left fork\n", arg->id);
+        }
+
+        printf("phio id %d is eating\n", arg->id);
+        pthread_mutex_unlock(arg->left_fork);
+        pthread_mutex_unlock(arg->right_fork);
+        i++;
+    }
     // int i = gettid();
     // handle_state_philo(arg);
     // usleep(arg->data.time_t_eat);

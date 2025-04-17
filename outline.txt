@@ -1,0 +1,23 @@
+/*
+                ## OUTLINE ##
+        ** handle the philo to eat **
+    ** 1- philosofers sits next to each other every philo has a plate of spaguetee
+        and a fork in the right of there hands so N of Philo and N forks and N plates
+    ** 2- So the project is that every philo is a thread has to eat in a spessific amount of time that the user 
+        give us, but the problem is the philo has to eat with two forks the one that is n his left and right one,
+        while the philo is eating the one that sits beside him he won't get access to the his right fork.
+           --Philo eating blocks the resources with mutex, if the time is done the philo has to unlock the resourses to the othe
+            philo and then change his state to sleep then the same goes to the next one sits next of him 
+*/
+// LOOP WHILE simulation is still running:
+    // Think
+    // Lock left fork
+    // Lock right fork
+    // Record the time of the last meal
+    // Print "is eating"
+    // Sleep for time_to_eat
+    // Unlock right fork
+    // Unlock left fork
+    // Print "is sleeping"
+    // Sleep for time_to_sleep
+    // Print "is thinking"
