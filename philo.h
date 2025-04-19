@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/18 18:31:14 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/04/19 17:09:56 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,3 +50,5 @@ typedef struct s_philo_info
 
 void pars_data(t_data *data, char **av, int size);
 long long get_time_ms(t_data *data);
+void ft_print_stat(t_philo_info *info, char *stat, long long time);
+void *routine(void *args);
