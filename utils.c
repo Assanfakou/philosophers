@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/19 18:12:09 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/04/22 11:15:38 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,7 @@ void ft_mutex(t_philo_info *info, char *msg, long long time, pthread_mutex_t mut
 }
 void ft_print_stat(t_philo_info *info, char *stat, long long time)
 {
+    pthread_mutex_lock(&info->data->print_mut);
     printf("%lld %d %s\n", time, info->id, stat);
+    pthread_mutex_unlock(&info->data->print_mut);
 }

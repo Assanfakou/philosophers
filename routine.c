@@ -1,5 +1,24 @@
 #include "philo.h"
+void ft_eating_time(t_philo_info *info, long long now)
+{
+    if (info->id % 2 == 0)
+    {
+        pthread_mutex_lock(info->left_fork);
+        ft_print_stat(info, "took left fork", now);
+        pthread_mutex_lock(info->right_fork);
+        ft_print_stat(info, "took right fork", now);
+        info->state = 2;
+    }
+    else
+    {
+        pthread_mutex_lock(info->right_fork);
+        ft_print_stat(info, "else took right fork", now);
+        pthread_mutex_lock(info->left_fork);
+        ft_print_stat(info, "else took left fork", now);
+        info->state = 2;
+    }
 
+}
 void *routine(void *args)
 {
     t_philo_info *info = (t_philo_info *)args;
@@ -27,8 +46,8 @@ void *routine(void *args)
         pthread_mutex_lock(&info->meal_mutex);
         info->num_meals++;
         currant_meals = info->num_meals;
-        pthread_mutex_unlock(&info->meal_mutex);
         now = get_time_ms(info->data);
+        pthread_mutex_unlock(&info->meal_mutex);
         if (now - last_meal_time > info->data->time_t_die)
         {
             ft_print_stat(info, "died", now);
@@ -37,24 +56,9 @@ void *routine(void *args)
             pthread_mutex_unlock(&info->data->stop_mut);
             break;
         }
+        ft_eating_time(info, now);
         ft_print_stat(info, "is thinking", now);
         info->state = 1;
-        if (info->id % 2 == 0)
-        {
-            pthread_mutex_lock(info->left_fork);
-            ft_print_stat(info, "took left fork", now);
-            pthread_mutex_lock(info->right_fork);
-            ft_print_stat(info, "took right fork", now);
-            info->state = 2;
-        }
-        else
-        {
-            pthread_mutex_lock(info->right_fork);
-            ft_print_stat(info, "else took right fork", now);
-            pthread_mutex_lock(info->left_fork);
-            ft_print_stat(info, "else took left fork", now);
-            info->state = 2;
-        }
         last_meal_time = get_time_ms(info->data);
         ft_print_stat(info, "is eating", now);
         usleep(info->data->time_t_eat * 1000);
