@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/22 11:11:31 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/04/23 12:29:59 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,12 @@ typedef struct s_philo_info
     pthread_mutex_t meal_mutex;
 }  t_philo_info;
 
-void pars_data(t_data *data, char **av, int size);
+int pars_data(t_data *data, char **av, int ac);
 long long get_time_ms(t_data *data);
 void ft_print_stat(t_philo_info *info, char *stat, long long time);
 void *routine(void *args);
+int ft_atoi(char *str);
+int ft_isdigit(char c);
+
+int fill_info(t_philo_info *info, t_philo *thds, t_data *data);
+int creat_threads(t_philo *thds, t_philo_info *info);

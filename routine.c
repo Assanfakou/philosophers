@@ -7,7 +7,6 @@ void ft_eating_time(t_philo_info *info, long long now)
         ft_print_stat(info, "took left fork", now);
         pthread_mutex_lock(info->right_fork);
         ft_print_stat(info, "took right fork", now);
-        info->state = 2;
     }
     else
     {
@@ -15,7 +14,6 @@ void ft_eating_time(t_philo_info *info, long long now)
         ft_print_stat(info, "else took right fork", now);
         pthread_mutex_lock(info->left_fork);
         ft_print_stat(info, "else took left fork", now);
-        info->state = 2;
     }
 
 }
@@ -58,7 +56,7 @@ void *routine(void *args)
         }
         ft_eating_time(info, now);
         ft_print_stat(info, "is thinking", now);
-        info->state = 1;
+
         last_meal_time = get_time_ms(info->data);
         ft_print_stat(info, "is eating", now);
         usleep(info->data->time_t_eat * 1000);
@@ -68,8 +66,6 @@ void *routine(void *args)
 
         ft_print_stat(info, "is sleeping", now);
         usleep(info->data->time_t_sleep * 1000);
-        if (info->state == 2)
-            info->state = 0;
     }
     return (NULL);
 }
