@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/27 13:06:14 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/04/27 16:02:55 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,4 @@ int fill_info(t_philo_info *info, t_philo *thds, t_data *data);
 int creat_threads(t_philo *thds, t_philo_info *info);
 int check_max(t_data *data);
 int ft_strlen(char *str);
-int ft_mutex(t_philo *thds, t_philo_info *filo);
+int ft_mutex(t_philo_info *filo ,t_philo *thds, t_data *);

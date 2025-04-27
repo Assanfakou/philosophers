@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/27 12:32:57 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/04/27 16:23:21 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@ int ft_isdigit(char c)
 
 int check_max(t_data *data)
 {
-    if (data->philo_number > 200)
+    if (data->philo_number > 200 || data->philo_number == 0)
         return (1);
-    else if (data->time_t_die < 60 || data->time_t_eat < 60 || data->time_t_sleep < 60)
+    else if (data->time_t_die < 60 || data->time_t_eat < 80 || data->time_t_sleep < 60)
         return (1);
-    return (0); 
+    else if (data->count_philo_eat == 0)
+        return (1);
+    return (0);
 }
 
 int pars_data(t_data *data, char **av, int ac)
@@ -100,5 +102,3 @@ int ft_atoi(char *str)
     }
     return (res * signe);
 }
-
-

@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/27 13:08:42 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/04/27 16:30:14 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@ int fill_info(t_philo_info *info, t_philo *thds, t_data *data)
 {
     int i_info;
     
-    i_info = 0;
-    if (creat_threads(thds, info))
+    thds->mutexes = malloc(sizeof(pthread_mutex_t) * data->philo_number);
+    
+    if (ft_mutex(info, thds, data))
         return (1);
-    thds->th = malloc(sizeof(pthread_t) * data->philo_number);
+    i_info = 0;
     while (i_info < data->philo_number)
     {
         info[i_info].id = i_info + 1;
@@ -30,23 +31,41 @@ int fill_info(t_philo_info *info, t_philo *thds, t_data *data)
         info[i_info].data = data;
         info[i_info].num_meals = 0;
         if (pthread_mutex_init(&info[i_info].meal_mutex, NULL) != 0)
-            return (1);        
+            return (1);
         i_info++;
     }
     return (0);
 }
-
-int creat_threads(t_philo *thds, t_philo_info *info)
+int ft_mutex(t_philo_info *info, t_philo *thds, t_data *data)
 {
     int i;
-    int j;
 
     i = 0;
-    j = 0;
-    while (i < info->data->philo_number)
+    while (i < data->philo_number)
     {
-        if (pthread_create(&thds->th[i], NULL, &routine, &info[i]) != 0)
+        if (pthread_mutex_init(&thds->mutexes[i], NULL) != 0)
             return (1);
+        i++;
+    }
+    if (pthread_mutex_init(&data->print_mut, NULL) != 0)
+        return (1);
+    if (pthread_mutex_init(&data->stop_mut, NULL) != 0)
+        return (1);
+    return (0);
+}
+    
+int creat_threads(t_philo *thds, t_philo_info *info)
+    {
+        int i;
+        int j;
+        
+        i = 0;
+        j = 0;
+        thds->th = malloc(sizeof(pthread_t) * info->data->philo_number);
+        while (i < info->data->philo_number)
+        {
+            if (pthread_create(&thds->th[i], NULL, &routine, &info[i]) != 0)
+                return (1);
         i++;
     }
     while (j < info->data->philo_number)
@@ -60,25 +79,6 @@ int creat_threads(t_philo *thds, t_philo_info *info)
 void ft_errour(char *str)
 {
     write(2, str, ft_strlen(str));
-}
-
-int ft_mutex(t_philo *thds, t_philo_info *filo)
-{
-    int i;
-    
-    i = 0;
-    thds->mutexes = malloc(sizeof(pthread_mutex_t) * filo->data->philo_number);
-    while (i < filo->data->philo_number)
-    {
-        if (pthread_mutex_init(&thds->mutexes[i], NULL) != 0)
-            return (1);
-        i++;
-    }
-    if (pthread_mutex_init(&filo->data->stop_mut, NULL) != 0)
-        return (1);
-    if (pthread_mutex_init(&filo->data->print_mut, NULL) != 0)
-        return (1);
-    return (0);
 }
 
 int main(int ac, char **av)
@@ -101,12 +101,17 @@ int main(int ac, char **av)
     shared_data.simulation_end = 0;
     
     if (fill_info(info, &thds, &shared_data) == 1)
+    {
+        ft_errour("Error While fill info");
         return (21);
-    i = 0;
+    }
     struct timeval tv;
     gettimeofday(&tv, NULL);
     shared_data.start_time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
     if (creat_threads(&thds, info) == 1)
+    {
+        ft_errour("Error in creat thread");
         return (17);
+    }
     free(thds.mutexes);
 }
