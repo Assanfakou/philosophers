@@ -4,16 +4,16 @@ void ft_eating_time(t_philo_info *info, long long now)
     if (info->id % 2 == 0)
     {
         pthread_mutex_lock(info->left_fork);
-        ft_print_stat(info, "took left fork", now);
+        ft_print_stat(info, "has taken a fork", now);
         pthread_mutex_lock(info->right_fork);
-        ft_print_stat(info, "took right fork", now);
+        ft_print_stat(info, "has taken a fork", now);
     }
     else
     {
         pthread_mutex_lock(info->right_fork);
-        ft_print_stat(info, "else took right fork", now);
+        ft_print_stat(info, "has taken a fork", now);
         pthread_mutex_lock(info->left_fork);
-        ft_print_stat(info, "else took left fork", now);
+        ft_print_stat(info, "has taken a fork", now);
     }
 
 }
