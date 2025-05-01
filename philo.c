@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/27 16:30:14 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/01 19:27:09 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,23 +51,28 @@ int ft_mutex(t_philo_info *info, t_philo *thds, t_data *data)
         return (1);
     if (pthread_mutex_init(&data->stop_mut, NULL) != 0)
         return (1);
+    if (pthread_mutex_init(&data->death_check, NULL) != 0)
+        return (1);
+    if (pthread_mutex_init(&data->meal_check, NULL) != 0)
+        return (1);
     return (0);
 }
     
 int creat_threads(t_philo *thds, t_philo_info *info)
+{
+    int i;
+    int j;
+    
+    i = 0;
+    j = 0;
+    thds->th = malloc(sizeof(pthread_t) * info->data->philo_number);
+    while (i < info->data->philo_number)
     {
-        int i;
-        int j;
-        
-        i = 0;
-        j = 0;
-        thds->th = malloc(sizeof(pthread_t) * info->data->philo_number);
-        while (i < info->data->philo_number)
-        {
-            if (pthread_create(&thds->th[i], NULL, &routine, &info[i]) != 0)
-                return (1);
+        if (pthread_create(&thds->th[i], NULL, &routine, &info[i]) != 0)
+            return (1);
         i++;
     }
+    monitoring(info);
     while (j < info->data->philo_number)
     {
         if (pthread_join(thds->th[j], NULL) != 0)
@@ -108,6 +113,7 @@ int main(int ac, char **av)
     struct timeval tv;
     gettimeofday(&tv, NULL);
     shared_data.start_time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+    // info[0].last_meal = get_time_ms() - shared_data.start_time;
     if (creat_threads(&thds, info) == 1)
     {
         ft_errour("Error in creat thread");

@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/27 16:23:21 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/01 19:06:49 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,22 @@ int pars_data(t_data *data, char **av, int ac)
     return (0);
 }
 
-long long get_time_ms(t_data *data)
+long long get_time_ms(void)
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000)) - data->start_time;
+    return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
 void ft_print_stat(t_philo_info *info, char *stat, long long time)
 {
+    pthread_mutex_lock(&info->data->stop_mut);
+    if (info->data->simulation_end)
+    {
+        pthread_mutex_unlock(&info->data->stop_mut);
+        return ;
+    }
+    pthread_mutex_unlock(&info->data->stop_mut);
     pthread_mutex_lock(&info->data->print_mut);
     printf("%lld %d %s\n", time, info->id, stat);
     pthread_mutex_unlock(&info->data->print_mut);
@@ -102,3 +109,4 @@ int ft_atoi(char *str)
     }
     return (res * signe);
 }
+

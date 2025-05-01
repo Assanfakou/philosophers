@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/04/27 16:02:55 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/01 15:37:49 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/time.h>
+// #include "../libft/libft.h"
 
 typedef struct s_data
 {
@@ -26,10 +27,11 @@ typedef struct s_data
     int count_philo_eat;
     long long start_time;
 
-    int simulation_end; 
+    int simulation_end;
     pthread_mutex_t stop_mut;
     pthread_mutex_t print_mut;
-    
+    pthread_mutex_t death_check;
+    pthread_mutex_t meal_check;
 }   t_data;
 typedef struct s_philo
 {
@@ -43,6 +45,7 @@ typedef struct s_philo_info
     int state;
     int num_meals;
 
+    long long last_meal;
     pthread_mutex_t *right_fork;
     pthread_mutex_t *left_fork;
     t_data *data;
@@ -50,7 +53,7 @@ typedef struct s_philo_info
 }  t_philo_info;
 
 int pars_data(t_data *data, char **av, int ac);
-long long get_time_ms(t_data *data);
+long long get_time_ms(void);
 void ft_print_stat(t_philo_info *info, char *stat, long long time);
 void *routine(void *args);
 int ft_atoi(char *str);
@@ -61,3 +64,7 @@ int creat_threads(t_philo *thds, t_philo_info *info);
 int check_max(t_data *data);
 int ft_strlen(char *str);
 int ft_mutex(t_philo_info *filo ,t_philo *thds, t_data *);
+
+void monitoring(t_philo_info *philo);
+int end_semulation(t_philo_info *info);
+int check_death(t_philo_info *info, t_data *data);
