@@ -13,9 +13,10 @@ int end_semulation(t_philo_info *info)
 }
 int check_death(t_philo_info *info, t_data *data)
 {
+    // printf("last_meal :%lld, time_to_die: %d\n", info->last_meal, data->time_t_die);
     if (info->last_meal > data->time_t_die)
     {
-        printf("last_meal :%lld, time_to_die: %d\n", info->last_meal, data->time_t_die);
+        // printf("last_meal :%lld, time_to_die: %d\n", info->last_meal, data->time_t_die);
         if (end_semulation(info))
         {
             pthread_mutex_lock(&data->death_check);
@@ -27,7 +28,6 @@ int check_death(t_philo_info *info, t_data *data)
     }
     return (0);
 }
-
 
 void monitoring(t_philo_info *philo)
 {
@@ -44,14 +44,16 @@ void monitoring(t_philo_info *philo)
         {
             if (check_death(&philo[i], data))
             {
-                printf("DEBUG: Philosopher %d has died at %lld.\n", philo[i].id, get_time_ms() - philo->data->start_time);
+                // printf("DEBUG: Philosopher %d has died at %lld.\n", philo[i].id, get_time_ms() - philo->data->start_time);
                 return ;
             }
+
             pthread_mutex_lock(&philo[i].meal_mutex);
             // printf("DEBUG: Philosopher %d meals: %d/%d\n", philo[i].id, philo[i].num_meals, data->count_philo_eat);
             if (philo->num_meals < data->count_philo_eat)
                 all_finished = 0;
             pthread_mutex_unlock(&philo[i].meal_mutex);
+
             i++;
         }
         if (all_finished)

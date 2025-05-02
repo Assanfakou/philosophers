@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/02 12:53:18 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/02 19:23:05 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,15 @@ void ft_eating_time(t_philo_info *info, long long now)
     if (info->id % 2 == 0)
     {
         pthread_mutex_lock(info->left_fork);
-        // now = get_time_ms() - info->data->start_time;
         ft_print_stat(info, "has taken a fork", now);
         pthread_mutex_lock(info->right_fork);
-        // now = get_time_ms() - info->data->start_time;
         ft_print_stat(info, "has taken a fork", now);
     }
     else
     {
         pthread_mutex_lock(info->right_fork);
-        // now = get_time_ms() - info->data->start_time;
         ft_print_stat(info, "has taken a fork", now);
         pthread_mutex_lock(info->left_fork);
-        // now = get_time_ms() - info->data->start_time;
         ft_print_stat(info, "has taken a fork", now);
     }
 }
@@ -52,24 +48,29 @@ void *routine(void *args)
         }
         pthread_mutex_unlock(&info->data->stop_mut);
         
-        pthread_mutex_lock(&info->data->stop_mut);
-        if (now - last_meal_time > info->data->time_t_die)
-        {
-            info->data->simulation_end = 1;
-            pthread_mutex_unlock(&info->data->stop_mut);
-            ft_print_stat(info, "died", get_time_ms() - info->data->start_time);
-            break;
-        }
-        pthread_mutex_unlock(&info->data->stop_mut);
-
+        
         ft_eating_time(info, now);
+        
+        
+        ft_print_stat(info, "is eating", now);
+        usleep(info->data->time_t_eat * 1000);
         
         pthread_mutex_lock(&info->meal_mutex);
         info->last_meal = get_time_ms() - info->data->start_time;
         pthread_mutex_unlock(&info->meal_mutex);
-
-        ft_print_stat(info, "is eating", now);
-        usleep(info->data->time_t_eat * 1000);
+        
+        pthread_mutex_lock(&info->data->stop_mut);
+        now = get_time_ms() - info->data->start_time;
+        if (now - last_meal_time > info->data->time_t_die)
+        {
+            pthread_mutex_unlock(info->left_fork);
+            pthread_mutex_unlock(info->right_fork);
+            info->data->simulation_end = 1;
+            pthread_mutex_unlock(&info->data->stop_mut);
+            break;
+            ft_print_stat(info, "died", get_time_ms() - info->data->start_time);
+        }
+        pthread_mutex_unlock(&info->data->stop_mut);
         
         pthread_mutex_unlock(info->left_fork);
         pthread_mutex_unlock(info->right_fork);
