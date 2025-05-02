@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/01 15:37:49 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/02 10:09:49 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct s_data
     long long start_time;
 
     int simulation_end;
+    int done_eating;
     pthread_mutex_t stop_mut;
     pthread_mutex_t print_mut;
     pthread_mutex_t death_check;

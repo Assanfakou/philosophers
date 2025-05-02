@@ -1,10 +1,21 @@
 #include "philo.h"
 
+int end_semulation(t_philo_info *info)
+{
+    pthread_mutex_lock(&info->data->death_check);
+    if (info->data->simulation_end)
+    {
+        pthread_mutex_unlock(&info->data->death_check);
+        return (1);
+    }
+    pthread_mutex_unlock(&info->data->death_check);
+    return (0);
+}
 int check_death(t_philo_info *info, t_data *data)
 {
     if (info->last_meal > data->time_t_die)
     {
-        //printf("last_meal :%lld, time_to_die: %d\n", info->last_meal, data->time_t_die);
+        printf("last_meal :%lld, time_to_die: %d\n", info->last_meal, data->time_t_die);
         if (end_semulation(info))
         {
             pthread_mutex_lock(&data->death_check);
@@ -17,17 +28,6 @@ int check_death(t_philo_info *info, t_data *data)
     return (0);
 }
 
-int end_semulation(t_philo_info *info)
-{
-    pthread_mutex_lock(&info->data->death_check);
-    if (info->data->simulation_end)
-    {
-        pthread_mutex_unlock(&info->data->death_check);
-        return (1);
-    }
-    pthread_mutex_unlock(&info->data->death_check);
-    return (0);
-}
 
 void monitoring(t_philo_info *philo)
 {
@@ -44,7 +44,7 @@ void monitoring(t_philo_info *philo)
         {
             if (check_death(&philo[i], data))
             {
-                //printf("DEBUG: Philosopher %d has died at %lld.\n", philo[i].id, get_time_ms() - philo->data->start_time);
+                printf("DEBUG: Philosopher %d has died at %lld.\n", philo[i].id, get_time_ms() - philo->data->start_time);
                 return ;
             }
             pthread_mutex_lock(&philo[i].meal_mutex);
@@ -57,7 +57,7 @@ void monitoring(t_philo_info *philo)
         if (all_finished)
         {
             pthread_mutex_lock(&data->death_check);
-            data->simulation_end = 1;
+            data->done_eating = 1;
             // printf("DEBUG: All philosophers have finished eating.\n");
             pthread_mutex_unlock(&data->death_check);
             return ;
@@ -67,3 +67,4 @@ void monitoring(t_philo_info *philo)
     }
     return ;
 }
+

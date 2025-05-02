@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/01 19:06:49 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/02 12:42:59 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ void ft_print_stat(t_philo_info *info, char *stat, long long time)
     }
     pthread_mutex_unlock(&info->data->stop_mut);
     pthread_mutex_lock(&info->data->print_mut);
+    time = get_time_ms() - info->data->start_time;
     printf("%lld %d %s\n", time, info->id, stat);
     pthread_mutex_unlock(&info->data->print_mut);
 }

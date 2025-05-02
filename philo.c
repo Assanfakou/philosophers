@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/01 19:27:09 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/02 10:10:06 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ int main(int ac, char **av)
         return (1);
     }
     shared_data.simulation_end = 0;
+    shared_data.done_eating = 0;
     
     if (fill_info(info, &thds, &shared_data) == 1)
     {
