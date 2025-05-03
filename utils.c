@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/02 17:41:06 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:23:45 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int check_max(t_data *data)
         return (1);
     else if (data->time_t_die < 60 || data->time_t_eat < 80 || data->time_t_sleep < 60)
         return (1);
-    else if (data->count_philo_eat == 0)
+    else if (data->must_eat_times == 0)
         return (1);
     return (0);
 }
@@ -43,23 +43,28 @@ int check_max(t_data *data)
 int pars_data(t_data *data, char **av, int ac)
 {
     int i;
+    int j;
 
-    while(ac > 0)
+    j = ac;
+    while(j > 0)
     {
         i = 0;
-        while (av[ac][i])
+        while (av[j][i])
         {
-            if (ft_isdigit(av[ac][i]) == 1 && av[ac][i] != '\0')
+            if (ft_isdigit(av[j][i]) == 1 && av[j][i] != '\0')
                 return (1);
             i++;
         }
-        ac--;
+        j--;
     }
     data->philo_number = ft_atoi(av[1]);
     data->time_t_die = ft_atoi(av[2]);
     data->time_t_eat = ft_atoi(av[3]);
     data->time_t_sleep = ft_atoi(av[4]);
-    data->count_philo_eat = ft_atoi(av[5]);
+    if (ac == 5)
+        data->must_eat_times = ft_atoi(av[5]);
+    else
+        data->must_eat_times = -1;
     if (check_max(data))
         return (1);
     return (0);
@@ -68,24 +73,16 @@ int pars_data(t_data *data, char **av, int ac)
 long long get_time_ms(void)
 {
     struct timeval tv;
+
     gettimeofday(&tv, NULL);
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void ft_print_stat(t_philo_info *info, char *stat, long long time)
+void ft_print_stat(t_philo *philo, char *action)
 {
-    pthread_mutex_lock(&info->data->stop_mut);
-    if (info->data->simulation_end)
-    {
-        pthread_mutex_unlock(&info->data->stop_mut);
-        // printf("%lld %d %s\n", time, info->id, stat);
+    if (philo->data->simulation_end)
         return ;
-    }
-    pthread_mutex_unlock(&info->data->stop_mut);
-    pthread_mutex_lock(&info->data->print_mut);
-    time = get_time_ms() - info->data->start_time;
-    printf("%lld %d %s\n", time, info->id, stat);
-    pthread_mutex_unlock(&info->data->print_mut);
+    printf("%lld %d %s\n", get_time_ms() - philo->data->start_time, philo->id, action);
 }
 int ft_atoi(char *str)
 {
@@ -96,7 +93,7 @@ int ft_atoi(char *str)
     i = 0;
     signe = 1;
     res  = 0;
-    while (str[i] == 32 || str[i] >= 9 && str[i] <= 13)
+    while (str[i] == 32 ||( str[i] >= 9 && str[i] <= 13))
         i++;
     if (str[i] == '+' || str[1] == '-')
     {

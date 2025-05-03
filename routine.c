@@ -6,93 +6,68 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/02 19:23:05 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/03 19:45:07 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-void ft_eating_time(t_philo_info *info, long long now)
+
+
+// void ft_wait(int time_to_wait, t_philo *philo)
+// {
+//     if (philo->data->simulation_end)
+//         return;
+    
+//     while (time_to_wait >= 500000)
+//     {
+//         if (philo->data->simulation_end)
+//             return ;
+//         usleep(500000);
+//         time_to_wait -= 500000;
+//     }
+//     if (time_to_wait > 0)
+//         usleep(time_to_wait);
+// }
+
+int     ft_usleep(size_t milliseconds, t_philo *philo)
 {
-    if (info->id % 2 == 0)
-    {
-        pthread_mutex_lock(info->left_fork);
-        ft_print_stat(info, "has taken a fork", now);
-        pthread_mutex_lock(info->right_fork);
-        ft_print_stat(info, "has taken a fork", now);
-    }
-    else
-    {
-        pthread_mutex_lock(info->right_fork);
-        ft_print_stat(info, "has taken a fork", now);
-        pthread_mutex_lock(info->left_fork);
-        ft_print_stat(info, "has taken a fork", now);
-    }
+        size_t  start;
+
+        start = get_time_ms();
+        while ((get_time_ms() - start) < milliseconds && philo->data->simulation_end == 0)
+                usleep(500);
+        return (0);
 }
 
-void *routine(void *args)
+void philo_cycle(t_philo *philo)
 {
-    t_philo_info *info = (t_philo_info *)args;
-    long long last_meal_time = get_time_ms() - info->data->start_time;
-    long long now;
-    int currant_meals;
-    info->last_meal = get_time_ms() - info->data->start_time;
-    // usleep(1);
-    
-    while (1)
+    pthread_mutex_lock(philo->left_fork);
+    pthread_mutex_lock(philo->right_fork);
+    ft_print_stat(philo, "has taken a fork");
+    ft_print_stat(philo, "has taken a fork");
+    philo->num_meals++;
+    philo->last_meal = get_time_ms();
+    ft_print_stat(philo, "is eating");
+    ft_usleep(philo->data->time_t_eat, philo);
+    pthread_mutex_unlock(philo->left_fork);
+    pthread_mutex_unlock(philo->right_fork);
+    ft_print_stat(philo, "is sleeping");
+    ft_usleep(philo->data->time_t_sleep, philo);
+    ft_print_stat(philo, "is thinking");
+}
+
+void *routine(void *arg)
+{
+    t_philo *philo;
+
+    philo = arg;
+    if (philo->data->philo_number == 1)
     {
-        pthread_mutex_lock(&info->data->stop_mut);
-        if (info->data->simulation_end)
-        {
-            pthread_mutex_unlock(&info->data->stop_mut);
-            break;
-        }
-        pthread_mutex_unlock(&info->data->stop_mut);
-        
-        
-        ft_eating_time(info, now);
-        
-        
-        ft_print_stat(info, "is eating", now);
-        usleep(info->data->time_t_eat * 1000);
-        
-        pthread_mutex_lock(&info->meal_mutex);
-        info->last_meal = get_time_ms() - info->data->start_time;
-        pthread_mutex_unlock(&info->meal_mutex);
-        
-        pthread_mutex_lock(&info->data->stop_mut);
-        now = get_time_ms() - info->data->start_time;
-        if (now - last_meal_time > info->data->time_t_die)
-        {
-            pthread_mutex_unlock(info->left_fork);
-            pthread_mutex_unlock(info->right_fork);
-            info->data->simulation_end = 1;
-            pthread_mutex_unlock(&info->data->stop_mut);
-            break;
-            ft_print_stat(info, "died", get_time_ms() - info->data->start_time);
-        }
-        pthread_mutex_unlock(&info->data->stop_mut);
-        
-        pthread_mutex_unlock(info->left_fork);
-        pthread_mutex_unlock(info->right_fork);
-
-        pthread_mutex_lock(&info->meal_mutex);
-        info->num_meals++;
-        currant_meals = info->num_meals;
-        pthread_mutex_unlock(&info->meal_mutex);
-        
-        pthread_mutex_lock(&info->data->stop_mut);
-        if (info->data->count_philo_eat > 0 && currant_meals >= info->data->count_philo_eat)
-        {
-            info->data->done_eating = 1;
-            pthread_mutex_unlock(&info->data->stop_mut);
-            break;
-        }
-        pthread_mutex_unlock(&info->data->stop_mut);
-
-        ft_print_stat(info, "is sleeping", now);
-        usleep(info->data->time_t_sleep * 1000);
-
-        ft_print_stat(info, "is thinking", now);
+        ft_print_stat(philo, "has taken a fork");
+        ft_usleep(philo->data->time_t_die, philo);
+        return (NULL);
     }
+    while (philo->data->simulation_end == 0)
+       philo_cycle(philo);
     return (NULL);
 }
