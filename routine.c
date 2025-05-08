@@ -6,12 +6,11 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/03 19:45:07 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/05 15:13:08 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
 
 // void ft_wait(int time_to_wait, t_philo *philo)
 // {
@@ -41,10 +40,20 @@ int     ft_usleep(size_t milliseconds, t_philo *philo)
 
 void philo_cycle(t_philo *philo)
 {
-    pthread_mutex_lock(philo->left_fork);
-    pthread_mutex_lock(philo->right_fork);
-    ft_print_stat(philo, "has taken a fork");
-    ft_print_stat(philo, "has taken a fork");
+    if (philo->id % 2 == 0)
+    {
+        pthread_mutex_lock(philo->left_fork);
+        pthread_mutex_lock(philo->right_fork);
+        ft_print_stat(philo, "has taken a fork");
+        ft_print_stat(philo, "has taken a fork");
+    }
+    else
+    {
+        pthread_mutex_lock(philo->right_fork);
+        pthread_mutex_lock(philo->left_fork);
+        ft_print_stat(philo, "has taken a fork");
+        ft_print_stat(philo, "has taken a fork");
+    }
     philo->num_meals++;
     philo->last_meal = get_time_ms();
     ft_print_stat(philo, "is eating");

@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/03 18:03:59 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/05 15:15:43 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/time.h>
-// #include "../libft/libft.h"
 
 #define MAX_NUMBER 200
 
@@ -51,9 +50,10 @@ void *routine(void *args);
 int ft_atoi(char *str);
 int ft_isdigit(char c);
 
-int fill_philos(t_philo *philos, t_data *data); // here
+int fill_philos(t_philo *philos, t_data *data);
 int create_threads(t_philo *philos, t_data *data);
 int check_max(t_data *data);
-int ft_strlen(char *str);
 
 void monitoring(t_philo *philo);
+
+int ft_strlen(char *str);

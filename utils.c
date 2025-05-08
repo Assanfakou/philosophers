@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/03 19:23:45 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/05 12:02:58 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int pars_data(t_data *data, char **av, int ac)
         i = 0;
         while (av[j][i])
         {
-            if (ft_isdigit(av[j][i]) == 1 && av[j][i] != '\0')
+            if (ft_isdigit(av[j][i]) == 1)
                 return (1);
             i++;
         }

@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/03 18:09:26 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/05/05 16:11:32 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,7 @@ int create_threads(t_philo *philos, t_data *data)
     }
     return (0);
 }
-void ft_errour(char *str)
-{
-    write(2, str, ft_strlen(str));
-}
+
 void cleaning(t_data *data)
 {
     int j;
@@ -60,14 +57,14 @@ void cleaning(t_data *data)
     j = 0;
     while (j < data->philo_number)
     {
-        pthread_join(data->threads[j], NULL);
+        pthread_detach(data->threads[j]);
         j++;
     }
 
     j = 0;
     while (j < data->philo_number)
     {
-        pthread_mutex_destroy(data->forks + j);
+        pthread_mutex_destroy(&data->forks[j]);
         j++;
     }
 }
@@ -82,18 +79,18 @@ int main(int ac, char **av)
         return (1);
     if (pars_data(&shared_data, av, ac - 1))
     {
-        ft_errour("Error in Parse Data\n");
-        return (1);
+        printf("Error in Parse Data\n");
+        return (2);
     }
     if (fill_philos(philos, &shared_data) == 1)
     {
-        ft_errour("Error While fill philos");
-        return (21);
+        printf("Error While fill philos");
+        return (3);
     }
     if (create_threads(philos, &shared_data) == 1)
     {
-        ft_errour("Error in creat thread");
-        return (17);
+        printf("Error in creat thread");
+        return (4);
     }
     monitoring(philos);
     cleaning(&shared_data);
