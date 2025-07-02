@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:14:03 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/02 11:47:02 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 16:05:08 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,16 @@ void monitoring(t_philo *philo)
                 all_finished = 0;
             i++;
         }
+        pthread_mutex_lock(&philo->data->num_meals);
         if (all_finished && philo->data->must_eat_times != -1)
         {
             pthread_mutex_lock(&philo->data->simulation);
             philo->data->simulation_end = 1;
             pthread_mutex_unlock(&philo->data->simulation);
+            pthread_mutex_unlock(&philo->data->num_meals);
             return ;
         }
+        pthread_mutex_unlock(&philo->data->num_meals);
     }
 }
 

@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/02 13:58:03 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 16:35:11 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int     ft_usleep(size_t milliseconds, t_philo *philo)
 
         start = get_time_ms();
         while ((get_time_ms() - start) < milliseconds && philo->data->simulation_end == 0)
-                usleep(500);
+            usleep(500);
         return (0);
 }
 void manger(t_philo *philo)
