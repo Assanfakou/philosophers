@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/05 15:13:08 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 12:16:30 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,15 @@ void philo_cycle(t_philo *philo)
     {
         pthread_mutex_lock(philo->left_fork);
         pthread_mutex_lock(philo->right_fork);
-        ft_print_stat(philo, "has taken a fork");
-        ft_print_stat(philo, "has taken a fork");
+        ft_print_stat(philo, "has taken left fork");
+        ft_print_stat(philo, "has taken right fork");
     }
     else
     {
         pthread_mutex_lock(philo->right_fork);
         pthread_mutex_lock(philo->left_fork);
-        ft_print_stat(philo, "has taken a fork");
-        ft_print_stat(philo, "has taken a fork");
+        ft_print_stat(philo, "has taken right fork");
+        ft_print_stat(philo, "has taken left fork");
     }
     philo->num_meals++;
     philo->last_meal = get_time_ms();

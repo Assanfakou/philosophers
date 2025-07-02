@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/05 16:11:32 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 12:11:16 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,10 @@ int main(int ac, char **av)
 
 
     if (ac != 6 && ac != 5)
+    {
+        printf("the input should be : number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
         return (1);
+    }
     if (pars_data(&shared_data, av, ac - 1))
     {
         printf("Error in Parse Data\n");
