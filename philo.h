@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/05 15:15:43 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 16:29:35 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,9 @@ typedef struct s_data
     int simulation_end;
     pthread_t threads[MAX_NUMBER];
     pthread_mutex_t forks[MAX_NUMBER];
+    pthread_mutex_t simulation;
+    pthread_mutex_t num_meals;
+    pthread_mutex_t sim;
 }   t_data;
 
 

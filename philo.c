@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/02 12:11:16 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 16:45:34 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@ int fill_philos(t_philo *philos, t_data *data)
         philos[i].left_fork = &(data->forks[i]);
         philos[i].right_fork = &(data->forks[(i + 1) % data->philo_number]);
         philos[i].data = data;
+        if (pthread_mutex_init(&data->simulation, NULL) != 0)
+            return (1);
+        if (pthread_mutex_init(&data->num_meals, NULL) != 0)
+            return (1);
         i++;
     }
     return (0);

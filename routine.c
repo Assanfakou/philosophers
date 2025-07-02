@@ -6,27 +6,11 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/02 12:16:30 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 16:45:02 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-// void ft_wait(int time_to_wait, t_philo *philo)
-// {
-//     if (philo->data->simulation_end)
-//         return;
-    
-//     while (time_to_wait >= 500000)
-//     {
-//         if (philo->data->simulation_end)
-//             return ;
-//         usleep(500000);
-//         time_to_wait -= 500000;
-//     }
-//     if (time_to_wait > 0)
-//         usleep(time_to_wait);
-// }
 
 int     ft_usleep(size_t milliseconds, t_philo *philo)
 {
@@ -34,29 +18,34 @@ int     ft_usleep(size_t milliseconds, t_philo *philo)
 
         start = get_time_ms();
         while ((get_time_ms() - start) < milliseconds && philo->data->simulation_end == 0)
-                usleep(500);
+            usleep(500);
         return (0);
 }
-
-void philo_cycle(t_philo *philo)
+void manger(t_philo *philo)
 {
     if (philo->id % 2 == 0)
     {
-        pthread_mutex_lock(philo->left_fork);
         pthread_mutex_lock(philo->right_fork);
+        pthread_mutex_lock(philo->left_fork);
         ft_print_stat(philo, "has taken left fork");
         ft_print_stat(philo, "has taken right fork");
     }
     else
     {
-        pthread_mutex_lock(philo->right_fork);
         pthread_mutex_lock(philo->left_fork);
+        pthread_mutex_lock(philo->right_fork);
         ft_print_stat(philo, "has taken right fork");
         ft_print_stat(philo, "has taken left fork");
     }
+    ft_print_stat(philo, "is eating");
+}
+
+void philo_cycle(t_philo *philo)
+{
+    manger(philo); 
+
     philo->num_meals++;
     philo->last_meal = get_time_ms();
-    ft_print_stat(philo, "is eating");
     ft_usleep(philo->data->time_t_eat, philo);
     pthread_mutex_unlock(philo->left_fork);
     pthread_mutex_unlock(philo->right_fork);
@@ -77,6 +66,6 @@ void *routine(void *arg)
         return (NULL);
     }
     while (philo->data->simulation_end == 0)
-       philo_cycle(philo);
+        philo_cycle(philo);
     return (NULL);
 }
