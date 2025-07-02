@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/05/05 15:13:08 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 11:52:54 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,12 @@ void *routine(void *arg)
         ft_usleep(philo->data->time_t_die, philo);
         return (NULL);
     }
+    pthread_mutex_lock(&philo->data->simulation);
     while (philo->data->simulation_end == 0)
-       philo_cycle(philo);
+    {
+        pthread_mutex_unlock(&philo->data->simulation);
+        philo_cycle(philo);
+    }
+    pthread_mutex_unlock(&philo->data->simulation);
     return (NULL);
 }
