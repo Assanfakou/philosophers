@@ -6,52 +6,73 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:14:03 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/02 16:05:08 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/07 06:45:43 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int check_death(t_philo *philo)
+int check_death(t_philo *philos)
 {
-    if (get_time_ms() - philo->last_meal >= philo->data->time_t_die)
-    {
-        pthread_mutex_lock(&philo->data->simulation);
-        philo->data->simulation_end = 1;
-        pthread_mutex_unlock(&philo->data->simulation);
-        printf("%lld %d is dead\n", get_time_ms() - philo->data->start_time, philo->id);
-        return (1);
-    }
-    return (0);
+	int i;
+	t_philo *philo;
+
+	i = 0;
+	while (i < philos->data->philo_number)
+	{
+		philo = &philos[i];
+		pthread_mutex_lock(&philo->stats);
+		if (get_time_ms() - philo->last_meal > philos->data->time_t_die)
+		{
+			pthread_mutex_lock(&philos->data->simulation);
+			philos->data->simulation_end = 1;
+			pthread_mutex_unlock(&philos->data->simulation);
+			printf("%lld %d is dead\n", get_time_ms() - philos->data->start_time, philos->id);
+			pthread_mutex_unlock(&philo->stats);
+			return (1);
+		}
+		pthread_mutex_unlock(&philo->stats);
+		i++;
+	}
+	return (0);
 }
 
-void monitoring(t_philo *philo)
+int all_philos_full(t_philo *philos)
 {
-    int all_finished;
-    int i;
+	int all_finished;
+	int i;
 
-    while (1)
-    {
-        i = 0;
-        all_finished = 1;
-        while (i < philo[0].data->philo_number)
-        {
-            if (check_death(&philo[i]))
-                return ;
-            if (philo->num_meals <= philo[0].data->must_eat_times)
-                all_finished = 0;
-            i++;
-        }
-        pthread_mutex_lock(&philo->data->num_meals);
-        if (all_finished && philo->data->must_eat_times != -1)
-        {
-            pthread_mutex_lock(&philo->data->simulation);
-            philo->data->simulation_end = 1;
-            pthread_mutex_unlock(&philo->data->simulation);
-            pthread_mutex_unlock(&philo->data->num_meals);
-            return ;
-        }
-        pthread_mutex_unlock(&philo->data->num_meals);
-    }
+	all_finished = 0;
+	i = 0;
+	while (i < philos->data->philo_number)
+	{
+		pthread_mutex_lock(&philos[i].stats);
+		if (philos[i].num_meals >= philos->data->must_eat_times)
+			all_finished++;
+		pthread_mutex_unlock(&philos[i].stats);
+		i++;
+	}
+	if (all_finished >= philos->data->philo_number)
+	{
+		pthread_mutex_lock(&philos->data->simulation);
+		philos->data->simulation_end = 1;
+		pthread_mutex_unlock(&philos->data->simulation);
+		return (1);
+	}
+	return (0);
+}
+
+void monitoring(t_philo *philos)
+{
+	while (1)
+	{
+		if (check_death(philos))
+			return ;
+		if (philos->data->must_eat_times < 0)
+			continue ;
+		if (all_philos_full(philos))
+			return ;
+		usleep(500);
+	}
 }
 
