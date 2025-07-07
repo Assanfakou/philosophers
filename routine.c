@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/07 06:52:17 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/02 16:45:02 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,6 @@ int     ft_usleep(size_t milliseconds, t_philo *philo)
 	while ((get_time_ms() - start) < milliseconds && philo->data->simulation_end == 0)
 		usleep(500);
 	return (0);
-}
-void manger(t_philo *philo)
-{
-
-	pthread_mutex_lock(philo->left_fork);
-	pthread_mutex_lock(philo->right_fork);
-	ft_print_stat(philo, "has taken a fork");
-	ft_print_stat(philo, "has taken a fork");
-	ft_print_stat(philo, "is eating");
 }
 
 void philo_cycle(t_philo *philo)
