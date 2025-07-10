@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/07 06:42:10 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/10 14:19:18 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void ft_print_stat(t_philo *philo, char *action)
 		pthread_mutex_unlock(&philo->data->simulation);
 		return ;
 	}
-	printf("%lld %d %s\n", get_time_ms() - philo->data->start_time, philo->id, action);
+	printf("%s%lld %d %s\n", YLW, get_time_ms() - philo->data->start_time, philo->id, action);
 	pthread_mutex_unlock(&philo->data->simulation);
 }
 

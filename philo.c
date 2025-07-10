@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/02 16:45:34 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/09 16:35:10 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void cleaning(t_data *data)
 		pthread_mutex_destroy(&data->forks[j]);
 		j++;
 	}
+	pthread_mutex_destroy(&data->simulation);
 }
 
 int main(int ac, char **av)

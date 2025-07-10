@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/02 16:45:02 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/10 14:25:39 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int     ft_usleep(size_t milliseconds, t_philo *philo)
 void philo_cycle(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left_fork); // TAKE fork
-	ft_print_stat(philo, "has taken a fork"); 
+	ft_print_stat(philo, "has taken a fork");
 	pthread_mutex_lock(philo->right_fork); // take fork
 	pthread_mutex_lock(&philo->stats);
 	ft_print_stat(philo, "has taken a fork");
@@ -36,9 +36,9 @@ void philo_cycle(t_philo *philo)
 	ft_usleep(philo->data->time_t_eat, philo);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
-	ft_print_stat(philo, "is sleeping");
+	ft_print_stat(philo, "is sleeping ^^^");
 	ft_usleep(philo->data->time_t_sleep, philo);
-	ft_print_stat(philo, "is thinking");
+	ft_print_stat(philo, "is thinking ...");
 }
 
 void *routine(void *arg)
