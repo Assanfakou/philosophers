@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/10 14:25:39 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/10 19:50:20 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,17 @@ int     ft_usleep(size_t milliseconds, t_philo *philo)
 	size_t  start;
 
 	start = get_time_ms();
-	while ((get_time_ms() - start) < milliseconds && philo->data->simulation_end == 0)
+	while ((get_time_ms() - start) < milliseconds)
+	{
+		pthread_mutex_lock(&philo->data->simulation);
+		if (philo->data->simulation_end == 1)
+		{
+			pthread_mutex_unlock(&philo->data->simulation);
+			return (0);
+		}
+		pthread_mutex_unlock(&philo->data->simulation);
 		usleep(500);
+	}
 	return (0);
 }
 

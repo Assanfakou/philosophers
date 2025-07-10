@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gcc  *.c -o  philo
+gcc -g -fsanitize=thread *.c -o  philo

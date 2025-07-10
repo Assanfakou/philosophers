@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/09 16:35:10 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/10 19:51:01 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,16 @@ int fill_philos(t_philo *philos, t_data *data)
 	{
 		philos[i].id = i + 1;
 		philos[i].num_meals = 0;
-		philos[i].left_fork = &(data->forks[i]);
-		philos[i].right_fork = &(data->forks[(i + 1) % data->philo_number]);
+		if (i % 2 == 0)
+		{
+			philos[i].left_fork = &(data->forks[i]);
+			philos[i].right_fork = &(data->forks[(i + 1) % data->philo_number]);
+		}
+		else
+		{
+			philos[i].right_fork = &(data->forks[i]);
+			philos[i].left_fork = &(data->forks[(i + 1) % data->philo_number]);
+		}
 		philos[i].data = data;
 		if (pthread_mutex_init(&philos[i].stats, NULL) != 0)
 			return (1);
@@ -89,7 +97,7 @@ int main(int ac, char **av)
 
     if (ac != 6 && ac != 5)
     {
-        printf("the input should be : number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
+        printf("%sthe input should be : number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n", RED);
         return (1);
     }
     if (pars_data(&shared_data, av, ac - 1))
