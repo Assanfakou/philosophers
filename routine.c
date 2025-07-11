@@ -6,15 +6,15 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/10 19:50:20 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/11 15:32:43 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int     ft_usleep(size_t milliseconds, t_philo *philo)
+int	ft_usleep(size_t milliseconds, t_philo *philo)
 {
-	size_t  start;
+	size_t	start;
 
 	start = get_time_ms();
 	while ((get_time_ms() - start) < milliseconds)
@@ -31,7 +31,7 @@ int     ft_usleep(size_t milliseconds, t_philo *philo)
 	return (0);
 }
 
-void philo_cycle(t_philo *philo)
+void	philo_cycle(t_philo *philo)
 {
 	pthread_mutex_lock(philo->left_fork); // TAKE fork
 	ft_print_stat(philo, "has taken a fork");
@@ -45,14 +45,30 @@ void philo_cycle(t_philo *philo)
 	ft_usleep(philo->data->time_t_eat, philo);
 	pthread_mutex_unlock(philo->left_fork);
 	pthread_mutex_unlock(philo->right_fork);
-	ft_print_stat(philo, "is sleeping ^^^");
+	ft_print_stat(philo, "is sleeping");
 	ft_usleep(philo->data->time_t_sleep, philo);
-	ft_print_stat(philo, "is thinking ...");
+	ft_print_stat(philo, "is thinking");
 }
 
-void *routine(void *arg)
+/**
+ * routine - Main function executed by each philosopher thread.
+ *
+ * @arg: A pointer to the philosopher's data (cast to void* for pthreads).
+ *
+ * This function is the entry point for each thread. It handles:
+ * - The special case when there is only one philosopher (he takes one fork and dies).
+ * - An infinite loop where the philosopher performs actions (eat, sleep, think).
+ * - A check at each loop to see if the simulation should end, using a shared flag.
+ *
+ * The loop stops if:
+ * - The simulation_end flag is set (someone died or all ate enough).
+ *
+ * Return: NULL when the thread ends.
+ */
+
+void	*routine(void *arg)
 {
-	t_philo *philo;
+	t_philo	*philo;
 
 	philo = arg;
 	if (philo->data->philo_number == 1)

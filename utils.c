@@ -6,15 +6,15 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/10 14:19:18 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/11 12:49:58 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -22,31 +22,32 @@ int ft_strlen(char *str)
 	return (i);
 }
 
-int ft_isdigit(char c)
+int	ft_isdigit(char c)
 {
 	if (c >= '0' && c <= '9')
 		return (0);
 	return (1);
 }
 
-int check_max(t_data *data)
+int	check_max(t_data *data)
 {
 	if (data->philo_number > 200 || data->philo_number == 0)
 		return (1);
-	//else if (data->time_t_die <= 60 || data->time_t_eat <= 80 || data->time_t_sleep <= 60)
+	//else if (data->time_t_die <= 60 || data->time_t_eat <= 80
+			//|| data->time_t_sleep <= 60)
 	// return (1);
 	else if (data->must_eat_times == 0)
 		return (1);
 	return (0);
 }
 
-int pars_data(t_data *data, char **av, int ac)
+int	pars_data(t_data *data, char **av, int ac)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	j = ac;
-	while(j > 0)
+	while (j > 0)
 	{
 		i = 0;
 		while (av[j][i])
@@ -70,15 +71,15 @@ int pars_data(t_data *data, char **av, int ac)
 	return (0);
 }
 
-long long get_time_ms(void)
+long long	get_time_ms(void)
 {
-	struct timeval tv;
+	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void ft_print_stat(t_philo *philo, char *action)
+void	ft_print_stat(t_philo *philo, char *action)
 {
 	pthread_mutex_lock(&philo->data->simulation);
 	if (philo->data->simulation_end)
@@ -86,20 +87,21 @@ void ft_print_stat(t_philo *philo, char *action)
 		pthread_mutex_unlock(&philo->data->simulation);
 		return ;
 	}
-	printf("%s%lld %d %s\n", YLW, get_time_ms() - philo->data->start_time, philo->id, action);
+	printf("%s%lld %d %s\n", YLW, get_time_ms() - philo->data->start_time,
+			philo->id, action);
 	pthread_mutex_unlock(&philo->data->simulation);
 }
 
-int ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
-	int i;
-	int signe;
-	int res;
+	int	i;
+	int	signe;
+	int	res;
 
 	i = 0;
 	signe = 1;
-	res  = 0;
-	while (str[i] == 32 ||( str[i] >= 9 && str[i] <= 13))
+	res = 0;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
 		i++;
 	if (str[i] == '+' || str[1] == '-')
 	{
@@ -114,4 +116,3 @@ int ft_atoi(char *str)
 	}
 	return (res * signe);
 }
-

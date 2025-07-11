@@ -12,10 +12,10 @@
 
 #include "philo.h"
 
-int check_death(t_philo *philos)
+int	check_death(t_philo *philos)
 {
-	int i;
-	t_philo *philo;
+	int		i;
+	t_philo	*philo;
 
 	i = 0;
 	while (i < philos->data->philo_number)
@@ -27,7 +27,8 @@ int check_death(t_philo *philos)
 			pthread_mutex_lock(&philos->data->simulation);
 			philos->data->simulation_end = 1;
 			pthread_mutex_unlock(&philos->data->simulation);
-			printf("%s%lld %d is dead\n", RED, get_time_ms() - philos->data->start_time, philos->id);
+			printf("%s%lld %d is dead\n", RED, get_time_ms()
+					- philos->data->start_time, philos->id);
 			pthread_mutex_unlock(&philo->stats);
 			return (1);
 		}
@@ -37,10 +38,10 @@ int check_death(t_philo *philos)
 	return (0);
 }
 
-int all_philos_full(t_philo *philos)
+int	all_philos_full(t_philo *philos)
 {
-	int all_finished;
-	int i;
+	int	all_finished;
+	int	i;
 
 	all_finished = 0;
 	i = 0;
@@ -62,7 +63,7 @@ int all_philos_full(t_philo *philos)
 	return (0);
 }
 
-void monitoring(t_philo *philos)
+void	monitoring(t_philo *philos)
 {
 	while (1)
 	{
@@ -75,4 +76,3 @@ void monitoring(t_philo *philos)
 		usleep(500);
 	}
 }
-
