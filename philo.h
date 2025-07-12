@@ -6,10 +6,11 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/10 14:23:41 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/12 13:02:38 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <limits.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -62,3 +63,4 @@ int					check_max(t_data *data);
 void				monitoring(t_philo *philo);
 
 int					ft_strlen(char *str);
+int					init_mutex(t_data *data);

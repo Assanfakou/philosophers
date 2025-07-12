@@ -6,36 +6,22 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/11 12:49:58 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/12 13:09:53 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_strlen(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-		i++;
-	return (i);
-}
-
-int	ft_isdigit(char c)
-{
-	if (c >= '0' && c <= '9')
-		return (0);
-	return (1);
-}
-
 int	check_max(t_data *data)
 {
 	if (data->philo_number > 200 || data->philo_number == 0)
 		return (1);
-	//else if (data->time_t_die <= 60 || data->time_t_eat <= 80
-			//|| data->time_t_sleep <= 60)
-	// return (1);
+	else if (data->time_t_die < 60 || data->time_t_eat < 60
+			|| data->time_t_sleep < 60)
+		return (1);
+	if (data->time_t_die == INT_MAX || data->time_t_eat == INT_MAX
+		|| data->time_t_sleep == INT_MAX)
+		return (1);
 	else if (data->must_eat_times == 0)
 		return (1);
 	return (0);
@@ -43,9 +29,7 @@ int	check_max(t_data *data)
 
 int	pars_data(t_data *data, char **av, int ac)
 {
-	int	i;
-	int	j;
-
+	int i, j;
 	j = ac;
 	while (j > 0)
 	{
@@ -94,9 +78,9 @@ void	ft_print_stat(t_philo *philo, char *action)
 
 int	ft_atoi(char *str)
 {
-	int	i;
-	int	signe;
-	int	res;
+	int		i;
+	int		signe;
+	long	res;
 
 	i = 0;
 	signe = 1;
@@ -112,6 +96,8 @@ int	ft_atoi(char *str)
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		res = res * 10 + (str[i] - '0');
+		if (res >= INT_MAX)
+			return (INT_MAX);
 		i++;
 	}
 	return (res * signe);

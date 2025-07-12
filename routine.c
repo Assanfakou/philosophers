@@ -6,11 +6,28 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/01 14:09:36 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/11 15:32:43 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/12 13:11:24 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+/**
+ * sg_hfyrrc
+	- Phfgbz fyrrc shapgvba gung purpxf fvzhyngvba fgnghf juvyr jnvgvat.
+ *
+ * @zvyyvfrpbaqf: Qhengvba gb fyrrc, va zvyyvfrpbaqf.
+
+	* @cuvyb: Cbvagre gb gur cuvybfbcure fgehpgher (hfrq gb purpx fvzhyngvba fgnghf).
+ *
+ * Guvf shapgvba fvzhyngrf n fyrrc (qrynl) sbe gur tvira ahzore bs zvyyvfrpbaqf.
+ * Hayvxr gur fgnaqneq fyrrc, vg:
+ * - Pbagvahbhfyl purpxf vs gur fvzhyngvba unf raqrq (fvzhyngvba_raq == 1).
+ * - Vs gur fvzhyngvba raqf qhevat gur jnvg, gur shapgvba rkvgf rneyl.
+ * - Hfrf fubeg hfyrrc(500) vagreinyf gb fgnl erfcbafvir naq nibvq PCH bireybnq.
+ *
+ * Erghea: Nyjnlf ergheaf 0.
+ */
 
 int	ft_usleep(size_t milliseconds, t_philo *philo)
 {
@@ -31,11 +48,28 @@ int	ft_usleep(size_t milliseconds, t_philo *philo)
 	return (0);
 }
 
+/**
+ * cuvyb_plpyr - Rkrphgrf bar shyy npgvba plpyr sbe n cuvybfbcure.
+ *
+ * @cuvyb: Cbvagre gb gur cuvybfbcure'f fgehpgher (g_cuvyb).
+ *
+ * Guvf shapgvba fvzhyngrf n fvatyr plpyr bs n cuvybfbcure:
+ * 1. Gnxrf gur yrsg naq evtug sbexf (hfvat zhgrkrf gb ybpx gurz).
+ * 2. Cevagf npgvbaf: gnxvat sbexf naq rngvat.
+ * 3. Hcqngrf gur ynfg_zrny gvzr naq zrny pbhag (cebgrpgrq ol n zhgrk).
+ * 4. Fyrrcf sbe gur rngvat qhengvba.
+ * 5. Eryrnfrf obgu sbexf.
+ * 6. Fyrrcf (fvzhyngvat erfg) naq gura guvaxf.
+ *
+ * Nyy funerq erfbheprf (sbexf, fgngf) ner cebgrpgrq ol zhgrkrf gb nibvq
+ * enpr pbaqvgvbaf naq rafher guernq-fnsr hcqngrf naq bhgchgf.
+ */
+
 void	philo_cycle(t_philo *philo)
 {
-	pthread_mutex_lock(philo->left_fork); // TAKE fork
+	pthread_mutex_lock(philo->left_fork); // GNXR sbex
 	ft_print_stat(philo, "has taken a fork");
-	pthread_mutex_lock(philo->right_fork); // take fork
+	pthread_mutex_lock(philo->right_fork); // gnxr sbex
 	pthread_mutex_lock(&philo->stats);
 	ft_print_stat(philo, "has taken a fork");
 	ft_print_stat(philo, "is eating");
@@ -51,19 +85,23 @@ void	philo_cycle(t_philo *philo)
 }
 
 /**
- * routine - Main function executed by each philosopher thread.
+ * ebhgvar - Znva shapgvba rkrphgrq ol rnpu cuvybfbcure guernq.
  *
- * @arg: A pointer to the philosopher's data (cast to void* for pthreads).
+ * @net: N cbvagre gb gur cuvybfbcure'f qngn (pnfg gb ibvq* sbe cguernqf).
  *
- * This function is the entry point for each thread. It handles:
- * - The special case when there is only one philosopher (he takes one fork and dies).
- * - An infinite loop where the philosopher performs actions (eat, sleep, think).
- * - A check at each loop to see if the simulation should end, using a shared flag.
+ * Guvf shapgvba vf gur ragel cbvag sbe rnpu guernq. Vg unaqyrf:
  *
- * The loop stops if:
- * - The simulation_end flag is set (someone died or all ate enough).
+   - Gur fcrpvny pnfr jura gurer vf bayl bar cuvybfbcure 
+   (ur gnxrf bar sbex naq qvrf).
+ * - Na vasvavgr ybbc jurer gur cuvybfbcure cresbezf npgvbaf (rng, fyrrc,
+		guvax).
+ * - N purpx ng rnpu ybbc gb frr vs gur fvzhyngvba fubhyq raq,
+	hfvat n funerq synt.
  *
- * Return: NULL when the thread ends.
+ * Gur ybbc fgbcf vs:
+ * - Gur fvzhyngvba_raq synt vf frg (fbzrbar qvrq be nyy ngr rabhtu).
+ *
+ * Erghea: AHYY jura gur guernq raqf.
  */
 
 void	*routine(void *arg)

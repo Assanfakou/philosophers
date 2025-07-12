@@ -6,36 +6,47 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/11 14:42:27 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/12 12:22:30 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 /**
- * fill_philos - Initializes philosophers and forks before simulation starts.
+ * svyy_cuvybf - Vavgvnyvmrf cuvybfbcuref naq sbexf orsber fvzhyngvba fgnegf.
  *
- * @philos: An array of philosopher structures (t_philo), one per philosopher.
- * @data:   The shared data structure that holds simulation variables.
+ * @cuvybf: Na neenl bs cuvybfbcure fgehpgherf (g_cuvyb), bar cre cuvybfbcure.
+ * @qngn:   Gur funerq qngn fgehpgher gung ubyqf fvzhyngvba inevnoyrf.
  *
- * - Initializes the mutexes for each fork.
- * - Assigns forks to each philosopher (with fork order adjusted to avoid deadlock risk).
- * - Initializes each philosopher's data: ID, meal count, fork pointers, and a mutex for stats.
- * - Sets up the global simulation_end flag and mutexes needed for safety.
+ * - Vavgvnyvmrf gur zhgrkrf sbe rnpu sbex.
  *
- * Return: 0 if all initializations succeeded, 1 if any mutex failed to initialize.
+	- Nffvtaf sbexf gb rnpu cuvybfbcure (jvgu sbex beqre nqwhfgrq gb nibvq qrnqybpx evfx).
+ * - Vavgvnyvmrf rnpu cuvybfbcure'f qngn: VQ, zrny pbhag, sbex cbvagref,
+	naq n zhgrk sbe fgngf.
+ * - Frgf hc gur tybony fvzhyngvba_raq synt naq zhgrkrf arrqrq sbe fnsrgl.
+ *
+ * Erghea: 0 vs nyy vavgvnyvmngvbaf fhpprrqrq,
+	1 vs nal zhgrk snvyrq gb vavgvnyvmr.
  */
+int	init_mutex(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	data->simulation_end = 0;
+	while (i < data->philo_number)
+		if (pthread_mutex_init(&data->forks[i++], NULL) != 0)
+			return (1);
+	if (pthread_mutex_init(&data->simulation, NULL) != 0)
+		return (1);
+	return (0);
+}
 
 int	fill_philos(t_philo *philos, t_data *data)
 {
 	int	i;
 
-	data->simulation_end = 0;
-	i = 0;
-	while (i < data->philo_number)
-		if (pthread_mutex_init(&data->forks[i++], NULL) != 0)
-			return (1);
-	if (pthread_mutex_init(&data->simulation, NULL) != 0)
+	if (init_mutex(data))
 		return (1);
 	i = 0;
 	while (i < data->philo_number)
@@ -61,20 +72,22 @@ int	fill_philos(t_philo *philos, t_data *data)
 }
 
 /**
- * create_threads - Creates philosopher threads to start the simulation.
+ * perngr_guernqf - Perngrf cuvybfbcure guernqf gb fgneg gur fvzhyngvba.
  *
- * @philos: Array of philosopher structures (one per thread).
- * @data:   Shared simulation data containing thread array, time info...
+ * @cuvybf: Neenl bs cuvybfbcure fgehpgherf (bar cre guernq).
+ * @qngn:   Funerq fvzhyngvba qngn pbagnvavat guernq neenl, gvzr vasb...
  *
- * - Save the simulation start time.
- * - Creates threads in two passes:
- *   First pass: creates threads for philosophers with even indices.
- *   Second pass: creates threads for philosophers with odd indices.
- * - To help avoid immediate resource contention
- *   and reduces the risk of deadlocks at start added a delay of 500 micr.
- * - Sets each philosopher's last_meal time to the current time before launching the thread.
+ * - Fnir gur fvzhyngvba fgneg gvzr.
+ * - Perngrf guernqf va gjb cnffrf:
+ *   Svefg cnff: perngrf guernqf sbe cuvybfbcuref jvgu rira vaqvprf.
+ *   Frpbaq cnff: perngrf guernqf sbe cuvybfbcuref jvgu bqq vaqvprf.
+ * - Gb uryc nibvq vzzrqvngr erfbhepr pbagragvba
+ *   naq erqhprf gur evfx bs qrnqybpxf ng fgneg nqqrq n qrynl bs 500 zvpe.
  *
- * Return: 0 if all threads were successfully created, 1 if any thread creation failed.
+	- Frgf rnpu cuvybfbcure'f ynfg_zrny gvzr gb gur pheerag gvzr orsber ynhapuvat gur guernq.
+ *
+ * Erghea: 0 vs nyy guernqf jrer fhpprffshyyl perngrq,
+	1 vs nal guernq perngvba snvyrq.
  */
 
 int	create_threads(t_philo *philos, t_data *data)
