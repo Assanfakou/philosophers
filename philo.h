@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 10:35:13 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/12 13:02:38 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/12 19:09:01 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,3 +64,4 @@ void				monitoring(t_philo *philo);
 
 int					ft_strlen(char *str);
 int					init_mutex(t_data *data);
+void	cleaning(t_data *data, t_philo *philos);

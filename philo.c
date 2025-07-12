@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:06:22 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/12 16:05:06 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/12 19:12:53 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	create_threads(t_philo *philos, t_data *data)
 	return (0);
 }
 
-void	cleaning(t_data *data)
+void	cleaning(t_data *data, t_philo *philos)
 {
 	int	j;
 
@@ -129,9 +129,12 @@ void	cleaning(t_data *data)
 	while (j < data->philo_number)
 	{
 		pthread_mutex_destroy(&data->forks[j]);
+		pthread_mutex_destroy(&philos[j].stats);
 		j++;
 	}
 	pthread_mutex_destroy(&data->simulation);
+
+	return ;
 }
 
 int	main(int ac, char **av)
@@ -161,5 +164,5 @@ int	main(int ac, char **av)
 		return (4);
 	}
 	monitoring(philos);
-	cleaning(&shared_data);
+	cleaning(&shared_data, philos);
 }
