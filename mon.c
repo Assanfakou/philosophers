@@ -6,7 +6,7 @@
 /*   By: hfakou <hfakou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/05 11:14:03 by hfakou            #+#    #+#             */
-/*   Updated: 2025/07/12 19:32:15 by hfakou           ###   ########.fr       */
+/*   Updated: 2025/07/13 17:04:02 by hfakou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	check_death(t_philo *philos)
 			philos->data->simulation_end = 1;
 			pthread_mutex_unlock(&philos->data->simulation);
 			printf("%s%lld %d is dead\n", RED, get_time_ms()
-					- philos->data->start_time, philos->id);
+					- philos->data->start_time, philo->id);
 			pthread_mutex_unlock(&philo->stats);
 			return (1);
 		}
@@ -73,6 +73,8 @@ void	monitoring(t_philo *philos)
 			continue ;
 		if (all_philos_full(philos))
 			return ;
+/*
 		usleep(500);
+*/
 	}
 }
